@@ -6,23 +6,11 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 15:13:54 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/03 18:10:42 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/03 21:13:41 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int	ft_parse_map(char *file_name)
-{
-	int	fd;
-
-	fd = open(file_name, O_RDONLY);
-  if (fd == -1)
-    return (write(2, "Invalid file\n", 14), -1);
-  if (ft_check_map_validity(fd) == -1)
-    return (write(2, "Map is not valid\n", 18), -1);
-  return (0);
-}
 
 int ft_check_map_validity(int fd)
 {
@@ -53,25 +41,57 @@ int ft_check_map_validity(int fd)
   free(lines_tab);
   return (0);
 }
-ft_create_map_from_file(int fd)
-{
-    char ***map;
-    char *line;
-}
-void ft_print_all_lines(char ***lines_tab)
+
+ft_parse_file(int fd)
 {
   int i;
-  int j;
 
-  i = 0;
-  while (lines_tab[i])
-  {
-    j = 0;
-    while (lines_tab[i][j])
+}
+char **ft_create_map_from_file(int fd)
+{
+    char **map;
+    char *line;
+    int i;
+
+    map = NULL;
+    if (!map)
+      return (NULL);
+    i = 0;
+    line = get_next_line(fd);
+    if (line)
     {
-      printf("%s", lines_tab[i][j]);
-      free(lines_tab[i][j++]);
+      while (line)
+      {
+        map[i++] = line;
+        free(line);
+        line = get_next_line(fd);
+        if (line == NULL)
+          return (ft_free_memory(map), NULL);
+      }
     }
-    i++;
-  }
+    else
+      return (NULL);
+    return (map);
+}
+
+char **ft_join_map_lines(char **map, char* new_line)
+{
+  // Prendre la map deja existante map[[line1],[line2], [line3], [line4]];
+  // et lui ajouter new_line;
+  // Allouer un element de plus a map deja existance
+  // puis join la new_line
+}
+
+int	ft_free_memory(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+	return (1);
 }
