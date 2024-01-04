@@ -1,10 +1,12 @@
-SRCS = parsing.c \
-			fdf.c \
+SRCS = fdf.c \
 			debug.c \
+			file.c \
+			map.c \
+			utils.c \
 			./gnl/get_next_line_utils.c \
 			./gnl/get_next_line.c \
 
-OBJS = $(SRCS:.c=.o) ./libft/libft.a
+OBJS = $(SRCS:.c=.o) ./libft/libft.a ./minilibx-linux/libmlx_Linux.a
 
 NAME = fdf
 
@@ -19,7 +21,7 @@ NC = \033[0m
 YELLOW = \e[0;93m
 
 $(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(LDFLAGS) $(OBJS) -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "	 			+---------------------+\n \
 					|  $(YELLOW)     FDF $(GREEN)[OK]$(NC)      |\n \
 					+---------------------+"
