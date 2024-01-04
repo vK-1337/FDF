@@ -1,5 +1,6 @@
 SRCS = parsing.c \
 			fdf.c \
+			debug.c \
 			./gnl/get_next_line_utils.c \
 			./gnl/get_next_line.c \
 

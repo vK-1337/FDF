@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/03 20:46:23 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/04 09:25:04 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int main(int ac, char **av)
 	map = ft_create_map_from_file(fd);
 	if (!map)
 		return (close(fd), 0);
-
+  ft_print_all_lines(map);
 	// CREATE MAP FROM FILE
 	// CHECK IF MAP IS VALID
 	// FDF(MAP)
