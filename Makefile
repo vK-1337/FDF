@@ -21,7 +21,7 @@ NC = \033[0m
 YELLOW = \e[0;93m
 
 $(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) -lXext -lX11 -lm -lz -o $(NAME)
 	@echo "	 			+---------------------+\n \
 					|  $(YELLOW)     FDF $(GREEN)[OK]$(NC)      |\n \
 					+---------------------+"
