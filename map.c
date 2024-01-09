@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/08 17:38:24 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/09 09:46:08 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ t_point ***ft_convert_map(char ***map)
     j = 0;
     while (map[i][j])
     {
-      new_map[i][j] = ft_convert_point(i, j, map[i][j]);
+      new_map[i][j] = ft_convert_point(j, i, map[i][j]);
       j++;
     }
     new_map[i][j] = NULL;
@@ -175,4 +175,26 @@ t_point *ft_convert_point(int x, int y, char *z)
   point->z = ft_atoi(z);
 
   return (point);
+}
+int ft_struct_map_len(t_point ***map)
+{
+  int i;
+  if (!map)
+    return (0);
+  i = 0;
+  while (map[i])
+    i++;
+  return (i);
+}
+
+int			ft_struct_linelen(t_point **line)
+{
+  int	i;
+
+  if (!line)
+    return (0);
+  i = 0;
+  while (line[i])
+    i++;
+  return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/08 19:51:07 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/09 11:11:10 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	main(int ac, char **av)
 		return (close(fd), 0);
   struct_map = ft_convert_map(map);
   ft_print_struct_map(struct_map);
+  printf("\n\n");
 	ft_fdf(struct_map);
 	return (0);
 }
@@ -53,7 +54,8 @@ int	ft_fdf(t_point ***map)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
-  ft_cast_whole_map(map, 45);
+  ft_cast_whole_map(map, 45, 40);
+  ft_print_struct_map(map);
 	draw_line(map, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
@@ -71,40 +73,68 @@ void ft_print_struct_map(t_point ***struct_map)
       printf("x = %f, y = %f, z = %f, color = %d\n", struct_map[i][j]->x, struct_map[i][j]->y, struct_map[i][j]->z, struct_map[i][j]->color);
       j++;
     }
+    printf("\n");
     i++;
   }
 }
 
-void ft_rotate_z(t_point *point, int angle)
+void ft_rotate_z(t_point *point, double sin_theta, double cos_theta, int x_space, int y_space)
 {
-  point->x = point->x * cos(angle) - point->y * sin(angle);
-  point->y = point->x * sin(angle) + point->y * cos(angle);
+    double new_x = ((point->x + x_space) * cos_theta) - ((point->y + y_space) * sin_theta) - x_space;
+    double new_y = ((point->x + x_space) * sin_theta) + ((point->y + y_space) * cos_theta) - y_space;
+
+    point->x = new_x;
+    point->y = new_y;
 }
 
-void ft_rotate_x(t_point *point, int angle)
+void ft_rotate_x(t_point *point, double sin_theta, double cos_theta)
 {
-  point->y = point->x * cos(angle) - point->y * sin(angle);
+
+    double new_y;
+    double new_z;
+
+    new_y = (point->y * cos_theta) - (point->z * sin_theta);
+    new_z = (point->y * sin_theta) + (point->z * cos_theta);
+    point->y = new_y;
+    point->z = new_z;
 }
-void ft_cast_point(t_point *point, int angle)
+void ft_cast_point(t_point *point, int angle, int x_space, int y_space)
 {
-  ft_rotate_z(point, angle);
-  ft_rotate_x(point, angle);
+  double rad;
+  double cos_theta;
+  double sin_theta;
+  (void)x_space;
+  (void)y_space;
+
+  rad = angle * M_PI / 180.0;
+  cos_theta = cos(rad);
+  sin_theta = sin(rad);
+
+  ft_rotate_z(point, sin_theta, cos_theta, x_space, y_space);
+  ft_rotate_x(point, sin_theta, cos_theta);
 }
 
-void ft_cast_whole_map(t_point ***map, int angle)
+
+void ft_cast_whole_map(t_point ***map, int angle, int space)
 {
   int i;
   int j;
+  int x_space;
+  int y_space;
 
   i = 0;
+  y_space = -1500;
   while (map[i])
   {
     j = 0;
+    x_space = 0;
     while (map[i][j])
     {
-      ft_cast_point(map[i][j], angle);
+      ft_cast_point(map[i][j], angle, x_space, y_space);
+      x_space += space;
       j++;
     }
+    y_space += space;
     i++;
   }
 }
@@ -113,73 +143,22 @@ void	draw_line(t_point ***map, t_data *img)
 {
 	int	i;
 	int	j;
-	int	x;
-  double x1;
-  double y1;
-  double x2;
-  double y2;
-  double x3;
-  double y3;
-  double x1_tan;
-  double y1_tan;
-  double x2_tan;
-  double y2_tan;
-  double x3_tan;
-  double y3_tan;
-	int	y;
-	int	space;
 
 	i = 0;
-	space = 50;
-	y = -500;
 	while (map[i])
 	{
-		x = 800;
 		j = 0;
 		while (map[i][j])
 		{
-      if (j < 17 && i < 10)
-      {
-        x1 = ft_first_rot_x(x, y);
-        y1 = ft_first_rot_y(x, y);
-        //
-        x2 = ft_first_rot_x(x + space, y);
-        y2 = ft_first_rot_y(x + space, y);
-        //
-        x3 = ft_first_rot_x(x, y + space);
-        y3 = ft_first_rot_y(x, y + space);
-        // //
-        x1_tan = ft_cast_point(map[i][j], 45);
-        y1_tan = ft_arc_tan_y(x1, y1, ft_atoi(map[i][j]));
-        //
-        x2_tan = ft_arc_tan_x(x2);
-        if (j == 19)
-          y2_tan = ft_arc_tan_y(x2, y2, ft_atoi(map[i][j]));
-        else
-          y2_tan = ft_arc_tan_y(x2, y2, ft_atoi(map[i][j + 1]));
-        x3_tan = ft_arc_tan_x(x3);
-        if (i == 18)
-          y3_tan = ft_arc_tan_y(x3, y3, ft_atoi(map[i][j]));
-        else
-          y3_tan = ft_arc_tan_y(x3, y3, ft_atoi(map[i + 1][j]));
-        //
-      }
-			if ((j < ft_linelen(map[i])) && (map[i][j + 1]))
-				bresenham(round(x1_tan), round(y1_tan), round(x2_tan), round(y2_tan), img);
-			if ((i < ft_maplen(map) - 1) && map[i + 1][j])
-				bresenham(round(x1_tan), round(y1_tan), round(x3_tan), round(y3_tan), img);
-			x += space;
+			if ((j < ft_struct_linelen(map[i])) && (map[i][j + 1]))
+				bresenham(round(map[i][j]->x), round(map[i][j]->y), round(map[i][j + 1]->x), round(map[i][j + 1]->y), img);
+			if ((i < ft_struct_map_len(map) - 1) && map[i + 1][j])
+				bresenham(round(map[i][j]->x), round(map[i][j]->y), round(map[i + 1][j]->x), round(map[i + 1][j]->y), img);
 			j++;
 		}
-		y += space;
 		i++;
 	}
 }
-
-// if ((j < ft_linelen(map[i])) && (map[i][j + 1]))
-// 				bresenham(round(x1_tan), round(y1_tan), round(x2_tan), round(y2_tan), img);
-// if ((i < ft_maplen(map) - 1) && map[i + 1][j])
-//   bresenham(round(x1_tan), round(y1_tan), round(x3_tan), round(y3_tan), img);
 
 void	bresenham(int x1, int y1, int x2, int y2, t_data *img)
 {

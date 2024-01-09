@@ -6,7 +6,6 @@
 # include "./minilibx-linux/mlx.h"
 # include <fcntl.h>
 # include <math.h>
-# include <math.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
@@ -14,7 +13,8 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
-
+# define CENTER_X 960
+# define CENTER_Y 540
 
 // STRUCT //
 typedef struct s_data
@@ -28,9 +28,9 @@ typedef struct s_data
 
 typedef struct s_point
 {
-	double		x;
-	double		y;
-	double		z;
+	double	x;
+	double	y;
+	double	z;
 	int		color;
 }			t_point;
 
@@ -39,35 +39,33 @@ int			ft_fdf(t_point ***map);
 
 // PARSING //
 int			ft_maplen(char ***map);
-char		***ft_join_map_lines(char ***map, char **new_line);
 char		***ft_create_map_from_file(int fd);
 int			ft_valid_file(char *file_name);
-char		*remove_spaces_and_newlines(char *str);
-char		***copy_map_content(char ***map, char ***new_map, char **new_line,
-				int maplen);
-int			get_map_length(char ***map);
-int			get_line_length(char **new_line);
 void		ft_trim_nl(char **points);
 char		***ft_add_map_line(char ***map, char **newline);
 char		***ft_join_map(char ***old_map, char **new_line);
-char		**ft_null_line(int line_len);
 int			ft_linelen(char **line);
-void		print_map(char ***map);
-t_point ***ft_convert_map(char ***map);
-void ft_print_struct_map(t_point ***struct_map);
-t_point *ft_convert_point(int x, int y, char *z);
+t_point		***ft_convert_map(char ***map);
+void		ft_print_struct_map(t_point ***struct_map);
+t_point		*ft_convert_point(int x, int y, char *z);
+int			ft_struct_map_len(t_point ***map);
+int			ft_struct_linelen(t_point **line);
+
 // MEMORY //
 void		ft_free_memory(char **tab);
 void		free_old_map(char ***map, int maplen);
 char		***allocate_new_map(int maplen, int line_length);
+
 // DEBUG //
 void		ft_print_all_lines(char **lines_tab);
+void		print_map(char ***map);
 
 // CALCULATIONS //
-double		ft_first_rot_x(int x, int y);
-double		ft_first_rot_y(int x, int y);
-double		ft_arc_tan_x(double x);
-double		ft_arc_tan_y(double x, double y, int z);
+void		ft_rotate_x(t_point *point, double sin_theta, double cos_theta);
+void		ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
+				int x_space, int y_space);
+void		ft_cast_point(t_point *point, int angle, int x_space, int y_space);
+void		ft_cast_whole_map(t_point ***map, int angle, int space);
 
 // GRAPHICS //
 void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
