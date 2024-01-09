@@ -15,7 +15,6 @@
 # define HEIGHT 1080
 # define CENTER_X 960
 # define CENTER_Y 540
-
 // STRUCT //
 typedef struct s_data
 {
@@ -33,6 +32,7 @@ typedef struct s_point
 	double	z;
 	int		color;
 }			t_point;
+
 
 // MAIN FUNCTION //
 int			ft_fdf(t_point ***map);
@@ -64,7 +64,7 @@ void		print_map(char ***map);
 void		ft_rotate_x(t_point *point, double sin_theta, double cos_theta);
 void		ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
 				int x_space, int y_space);
-void		ft_cast_point(t_point *point, int angle, int x_space, int y_space);
+void ft_cast_point(t_point *point, int angle, int x_space, int y_space);
 void		ft_cast_whole_map(t_point ***map, int angle, int space);
 
 // GRAPHICS //

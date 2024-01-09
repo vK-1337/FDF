@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/09 11:11:10 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/09 16:32:58 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ int	ft_fdf(t_point ***map)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
-  ft_cast_whole_map(map, 45, 40);
-  ft_print_struct_map(map);
+  ft_cast_whole_map(map, 45, 30);
 	draw_line(map, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	mlx_loop(mlx);
@@ -80,8 +79,8 @@ void ft_print_struct_map(t_point ***struct_map)
 
 void ft_rotate_z(t_point *point, double sin_theta, double cos_theta, int x_space, int y_space)
 {
-    double new_x = ((point->x + x_space) * cos_theta) - ((point->y + y_space) * sin_theta) - x_space;
-    double new_y = ((point->x + x_space) * sin_theta) + ((point->y + y_space) * cos_theta) - y_space;
+    double new_x = ((point->x + x_space) * cos_theta) - ((point->y + y_space) * sin_theta) + CENTER_X;
+    double new_y = ((point->x + x_space) * sin_theta) + ((point->y + y_space) * cos_theta) + CENTER_Y;
 
     point->x = new_x;
     point->y = new_y;
@@ -91,24 +90,21 @@ void ft_rotate_x(t_point *point, double sin_theta, double cos_theta)
 {
 
     double new_y;
-    double new_z;
 
-    new_y = (point->y * cos_theta) - (point->z * sin_theta);
-    new_z = (point->y * sin_theta) + (point->z * cos_theta);
+    new_y = (point->y * cos_theta) - ((point->z) * sin_theta);
     point->y = new_y;
-    point->z = new_z;
 }
 void ft_cast_point(t_point *point, int angle, int x_space, int y_space)
 {
   double rad;
   double cos_theta;
   double sin_theta;
-  (void)x_space;
-  (void)y_space;
 
-  rad = angle * M_PI / 180.0;
+  rad = (angle * M_PI)/ 180.0;
   cos_theta = cos(rad);
   sin_theta = sin(rad);
+
+  printf("x_space => %d, y_space => %d\n", x_space, y_space);
 
   ft_rotate_z(point, sin_theta, cos_theta, x_space, y_space);
   ft_rotate_x(point, sin_theta, cos_theta);
@@ -123,7 +119,7 @@ void ft_cast_whole_map(t_point ***map, int angle, int space)
   int y_space;
 
   i = 0;
-  y_space = -1500;
+  y_space = 0;
   while (map[i])
   {
     j = 0;
@@ -189,36 +185,4 @@ void	bresenham(int x1, int y1, int x2, int y2, t_data *img)
 			y1 += sy;
 		}
 	}
-}
-
-double ft_first_rot_x(int x, int y)
-{
-  double x1;
-  x1 = (x * (sqrt(2) / 2)) - (y * (sqrt(2) / 2));
-  printf("x1 = %f\n", x1);
-  return (x1);
-}
-
-double ft_first_rot_y(int x, int y)
-{
-  double y1;
-  y1 = (x * (sqrt(2) / 2)) + (y * (sqrt(2) / 2));
-  printf("y1 = %f\n", y1);
-  return (y1);
-}
-
-double ft_arc_tan_x(double x)
-{
-  double x1;
-  x1 = x;
-  return (x1);
-}
-
-double ft_arc_tan_y(double x, double y, int z)
-{
-  double y1;
-  (void)x;
-  printf("Z => |%d|\n", z);
-  y1 = (y * (sqrt(3)/3)) - (z * (sqrt(6)/3));
-  return (y1);
 }
