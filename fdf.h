@@ -15,6 +15,7 @@
 # define HEIGHT 1080
 # define CENTER_X 960
 # define CENTER_Y 540
+
 // STRUCT //
 typedef struct s_data
 {
@@ -32,6 +33,14 @@ typedef struct s_point
 	double	z;
 	int		color;
 }			t_point;
+
+typedef struct s_redraw
+{
+  t_point ***map;
+  t_data *img;
+  void *mlx;
+  void *mlx_win;
+}    t_redraw;
 
 
 // MAIN FUNCTION //
@@ -72,5 +81,13 @@ void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
 				int color);
 void		bresenham(int x1, int y1, int x2, int y2, t_data *img);
 void		draw_line(t_point ***map, t_data *img);
+int ft_render(t_redraw *redraw);
 
+// BONUS FUNCTIONS //
+void		ft_zoom_in(t_redraw *redraw);
+void		ft_zoom_out(t_redraw *redraw);
+void		ft_move_up(t_point ***map);
+void		ft_move_down(t_point ***map);
+void		ft_move_left(t_point ***map);
+void		ft_move_right(t_point ***map);
 #endif
