@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/09 12:56:54 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:43:00 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ int ft_maplen(char ***map)
   }
 	return (i);
 }
+
 
 t_point ***ft_convert_map(char ***map)
 {

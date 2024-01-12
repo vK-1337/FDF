@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/11 20:11:45 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/12 19:40:11 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,12 @@ int	handle_key(int key, void *param)
 	if (key == 65307)
 	{
 		printf("exit\n");
+		exit(0);
 	}
 	return (0);
 }
 
-int	handle_mouse(int button, int x, int y, t_redraw *redraw)
-{
-	printf("button = %d, x = %d, y = %d\n", button, x, y);
-	if (button == 4)
-		ft_zoom_in(redraw);
-	if (button == 5)
-		ft_zoom_out(redraw);
-	return (0);
-}
-
-void	ft_zoom_in(t_redraw *redraw)
+void	ft_zoom_in(t_hook_data *redraw)
 {
 	int	i;
 	int	j;
@@ -84,7 +75,7 @@ void	ft_zoom_in(t_redraw *redraw)
 		i++;
 	}
 }
-void	ft_zoom_out(t_redraw *redraw)
+void	ft_zoom_out(t_hook_data *redraw)
 {
 	int	i;
 	int	j;
@@ -106,26 +97,82 @@ void	ft_zoom_out(t_redraw *redraw)
 	}
 }
 
-void	ft_move_down(t_point ***map)
+void	ft_move_down(t_point ***map, t_positions *positions)
 {
-	(void)map;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			map[i][j]->y -= positions->old_y - positions->new_y;
+			j++;
+		}
+		i++;
+	}
 }
 
-void	ft_move_up(t_point ***map)
+void	ft_move_up(t_point ***map, t_positions *positions)
 {
-	(void)map;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			map[i][j]->y -= positions->old_y - positions->new_y;
+			j++;
+		}
+		i++;
+	}
 }
 
-void	ft_move_left(t_point ***map)
+void	ft_move_left(t_point ***map, t_positions *positions)
 {
-	(void)map;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			map[i][j]->x -= positions->old_x - positions->new_x;
+			j++;
+		}
+		i++;
+	}
 }
 
-void	ft_move_right(t_point ***map)
+void	ft_move_right(t_point ***map, t_positions *positions)
 {
-	(void)map;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			map[i][j]->x -= positions->old_x - positions->new_x;
+			j++;
+		}
+		i++;
+	}
 }
-int	ft_render(t_redraw *redraw)
+int	ft_render(t_hook_data *redraw)
 {
 	mlx_destroy_image(redraw->mlx, redraw->img->img);
 	redraw->img->img = mlx_new_image(redraw->mlx, 1920, 1080);
@@ -134,13 +181,99 @@ int	ft_render(t_redraw *redraw)
 		0);
 	return (0);
 }
+int	handle_mouse_press(int button, int x, int y, t_hook_data *data)
+{
+	if (button == 1)
+	{
+		data->mouse_x = x;
+		data->mouse_y = y;
+		data->mouse_one_pressed = 1;
+		printf("mouse one pressed\n");
+	}
+	if (button == 3)
+	{
+		data->mouse_x = x;
+		data->mouse_y = y;
+		data->mouse_two_pressed = 1;
+		printf("mouse two pressed\n");
+	}
+	if (button == 4)
+		ft_zoom_in(data);
+	if (button == 5)
+		ft_zoom_out(data);
+	return (0);
+}
+
+int	handle_mouse_release(int button, int x __attribute__((unused)),
+		int y __attribute__((unused)), t_hook_data *data)
+{
+	if (button == 1)
+	{
+		data->mouse_one_pressed = 0;
+		printf("mouse one released\n");
+	}
+	if (button == 3)
+	{
+		data->mouse_two_pressed = 0;
+		printf("mouse two released\n");
+	}
+	return (0);
+}
+
+int	handle_mouse_motion(int x, int y, t_hook_data *data)
+{
+	int			old_x;
+	int			old_y;
+	t_positions	positions;
+
+	if (data->mouse_one_pressed)
+	{
+		old_x = data->mouse_x;
+		old_y = data->mouse_y;
+		data->mouse_x = x;
+		data->mouse_y = y;
+		positions.old_x = old_x;
+		positions.old_y = old_y;
+		positions.new_x = data->mouse_x;
+		positions.new_y = data->mouse_y;
+		if (data->mouse_x > old_x && data->mouse_y < old_y)
+		{
+			ft_move_right(data->map, &positions);
+			ft_move_up(data->map, &positions);
+		}
+		else if (data->mouse_x > old_x && data->mouse_y > old_y)
+		{
+			ft_move_right(data->map, &positions);
+			ft_move_down(data->map, &positions);
+		}
+		else if (data->mouse_x < old_x && data->mouse_y < old_y)
+		{
+			ft_move_left(data->map, &positions);
+			ft_move_up(data->map, &positions);
+		}
+		else if (data->mouse_x < old_x && data->mouse_y > old_y)
+		{
+			ft_move_left(data->map, &positions);
+			ft_move_down(data->map, &positions);
+		}
+		else if (data->mouse_x > old_x)
+			ft_move_right(data->map, &positions);
+		else if (data->mouse_x < old_x)
+			ft_move_left(data->map, &positions);
+		else if (data->mouse_y > old_y)
+			ft_move_down(data->map, &positions);
+		else if (data->mouse_y < old_y)
+			ft_move_up(data->map, &positions);
+	}
+	return (0);
+}
 
 int	ft_fdf(t_point ***map)
 {
 	void		*mlx;
 	void		*mlx_win;
 	t_data		img;
-	t_redraw	*redraw;
+	t_hook_data	hook_data;
 
 	mlx = mlx_init();
 	mlx_win = mlx_new_window(mlx, 1920, 1080, "FDF");
@@ -150,16 +283,20 @@ int	ft_fdf(t_point ***map)
 	ft_cast_whole_map(map, 45, 30);
 	draw_line(map, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	redraw = malloc(sizeof(t_redraw));
-	if (!redraw)
-		return (0);
-	redraw->map = map;
-	redraw->img = &img;
-	redraw->mlx = mlx;
-	redraw->mlx_win = mlx_win;
-	mlx_mouse_hook(mlx_win, handle_mouse, redraw);
+	hook_data.map = map;
+	hook_data.img = &img;
+	hook_data.mlx = mlx;
+	hook_data.mlx_win = mlx_win;
+	hook_data.mouse_one_pressed = 0;
+	hook_data.mouse_two_pressed = 0;
 	mlx_key_hook(mlx_win, handle_key, NULL);
-	mlx_loop_hook(mlx, &ft_render, redraw);
+	mlx_hook(mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press,
+		&hook_data);
+	mlx_hook(mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release,
+		&hook_data);
+	mlx_hook(mlx_win, MotionNotify, PointerMotionMask, handle_mouse_motion,
+		&hook_data);
+	mlx_loop_hook(mlx, &ft_render, &hook_data);
 	mlx_loop(mlx);
 	return (0);
 }
@@ -167,8 +304,8 @@ int	ft_fdf(t_point ***map)
 void	ft_print_struct_map(t_point ***struct_map)
 {
 	int	i;
-  int j;
-  
+	int	j;
+
 	i = 0;
 	while (struct_map[i])
 	{
@@ -203,7 +340,7 @@ void	ft_rotate_x(t_point *point, double sin_theta, double cos_theta)
 {
 	double	new_y;
 
-	new_y = (point->y * cos_theta) - ((point->z * 5) * sin_theta);
+	new_y = (point->y * cos_theta) - ((point->z * 20) * sin_theta);
 	point->y = new_y;
 }
 void	ft_cast_point(t_point *point, int angle, int x_space, int y_space)

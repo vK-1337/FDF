@@ -10,6 +10,7 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+#include <X11/X.h>
 
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -42,6 +43,23 @@ typedef struct s_redraw
   void *mlx_win;
 }    t_redraw;
 
+typedef struct	s_hook_data {
+	void	*mlx;
+	void	*mlx_win;
+	int		mouse_x;
+	int		mouse_y;
+	int		mouse_one_pressed;
+  int		mouse_two_pressed;
+  t_data *img;
+  t_point ***map;
+}				t_hook_data;
+
+typedef struct s_positions {
+  int old_x;
+  int old_y;
+  int new_x;
+  int new_y;
+} t_positions;
 
 // MAIN FUNCTION //
 int			ft_fdf(t_point ***map);
@@ -81,13 +99,14 @@ void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
 				int color);
 void		bresenham(int x1, int y1, int x2, int y2, t_data *img);
 void		draw_line(t_point ***map, t_data *img);
-int ft_render(t_redraw *redraw);
+int ft_render(t_hook_data *redraw);
 
 // BONUS FUNCTIONS //
-void		ft_zoom_in(t_redraw *redraw);
-void		ft_zoom_out(t_redraw *redraw);
-void		ft_move_up(t_point ***map);
-void		ft_move_down(t_point ***map);
-void		ft_move_left(t_point ***map);
-void		ft_move_right(t_point ***map);
+void		ft_zoom_in(t_hook_data *redraw);
+void		ft_zoom_out(t_hook_data *redraw);
+void		ft_move_up(t_point ***map, t_positions *positions);
+void		ft_move_down(t_point ***map, t_positions *positions);
+void		ft_move_left(t_point ***map, t_positions *positions);
+void		ft_move_right(t_point ***map, t_positions *positions);
+
 #endif
