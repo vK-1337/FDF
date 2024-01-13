@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 12:36:35 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/13 12:47:12 by vk               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,77 +301,71 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 
 void	ft_rotate_map_z(t_point ***map, double angle)
 {
-	int	i;
-	int	j;
-	int	x_space;
-	int	y_space;
+    int	i;
+    int	j;
+    double	old_x;
+    double	old_y;
 
-	i = 0;
-	y_space = 0;
-	while (map[i])
-	{
-		j = 0;
-		x_space = 0;
-		while (map[i][j])
-		{
-			map[i][j]->x = (map[i][j]->x) * cos(angle) - (map[i][j]->y)
-				* sin(angle);
-			map[i][j]->y = (map[i][j]->x) * sin(angle) + (map[i][j]->y)
-				* cos(angle);
-			j++;
-		}
-		i++;
-	}
+    i = 0;
+    while (map[i])
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            old_x = map[i][j]->x;
+            old_y = map[i][j]->y;
+            map[i][j]->x = old_x * cos(angle) - old_y * sin(angle);
+            map[i][j]->y = old_x * sin(angle) + old_y * cos(angle);
+            j++;
+        }
+        i++;
+    }
 }
 
 void	ft_rotate_map_y(t_point ***map, double angle)
 {
-	int	i;
-	int	j;
-	int	x_space;
-	int	y_space;
+    int	i;
+    int	j;
+    double	old_x;
+    double	old_z;
 
-	i = 0;
-	y_space = 0;
-	while (map[i])
-	{
-		j = 0;
-		x_space = 0;
-		while (map[i][j])
-		{
-			map[i][j]->x = (map[i][j]->x) * cos(angle) + (map[i][j]->z)
-				* sin(angle);
-			map[i][j]->z = (map[i][j]->x) * -sin(angle) + (map[i][j]->z)
-				* cos(angle);
-			j++;
-		}
-		i++;
-	}
+    i = 0;
+    while (map[i])
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            old_x = map[i][j]->x;
+            old_z = map[i][j]->z;
+            map[i][j]->x = old_x * cos(angle) + old_z * sin(angle);
+            map[i][j]->z = -old_x * sin(angle) + old_z * cos(angle);
+            j++;
+        }
+        i++;
+    }
 }
 
 void	ft_rotate_map_x(t_point ***map, double angle)
 {
-	int	i;
-	int	j;
-	int	x_space;
-	int	y_space;
+    int	i;
+    int	j;
+    double	old_y;
+    double	old_z;
 
-	i = 0;
-	y_space = 0;
-	while (map[i])
-	{
-		j = 0;
-		x_space = 0;
-		while (map[i][j])
-		{
-			map[i][j]->y = (map[i][j]->y) * cos(angle) - (map[i][j]->z)
-				* sin(angle);
-			map[i][j]->z = (map[i][j]->y) * sin(angle) + (map[i][j]->z)
-				* cos(angle);
-			j++;
-		}
-		i++;
-	}
+    i = 0;
+    while (map[i])
+    {
+        j = 0;
+        while (map[i][j])
+        {
+            old_y = map[i][j]->y;
+            old_z = map[i][j]->z;
+            map[i][j]->y = old_y * cos(angle) - old_z * sin(angle);
+            map[i][j]->z = old_y * sin(angle) + old_z * cos(angle);
+            j++;
+        }
+        i++;
+    }
 }
 
 int	ft_fdf(t_point ***map)
