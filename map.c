@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/12 15:43:00 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/13 17:52:51 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,16 +167,41 @@ t_point ***ft_convert_map(char ***map)
 t_point *ft_convert_point(int x, int y, char *z)
 {
   t_point *point;
+  char **split;
 
   point = malloc(sizeof(t_point));
   if (!point)
     return (NULL);
   point->x = x;
   point->y = y;
-  point->z = ft_atoi(z);
-
+  if(!ft_find_coma(z))
+  {
+    point->color = 0;
+    point->z = ft_atoi(z);
+  }
+  else
+  {
+    split = ft_split(z, ',');
+    point->z = ft_atoi(split[0]);
+    point->color = strtol(split[1], NULL, 16);
+  }
   return (point);
 }
+
+int ft_find_coma(char *str)
+{
+  int i;
+
+  i = 0;
+  while (str[i])
+  {
+    if (str[i] == ',')
+      return (1);
+    i++;
+  }
+  return (0);
+}
+
 int ft_struct_map_len(t_point ***map)
 {
   int i;
@@ -198,4 +223,43 @@ int			ft_struct_linelen(t_point **line)
   while (line[i])
     i++;
   return (i);
+}
+
+t_origin ft_define_origin(t_point ***map)
+{
+  int row_index;
+  int col_index;
+  t_origin origin;
+
+  row_index = ft_define_mid_row(map);
+  col_index = ft_define_mid_col(map);
+  origin.row_index = row_index;
+  origin.col_index = col_index;
+  return (origin);
+}
+
+int ft_define_mid_col(t_point ***map)
+{
+  int mid_col;
+  int map_line_len;
+
+  map_line_len = ft_struct_linelen(map[0]);
+  if (map_line_len % 2 == 0)
+    mid_col = (map_line_len / 2) - 1;
+  else
+    mid_col = map_line_len / 2;
+  return (mid_col);
+}
+
+int ft_define_mid_row(t_point ***map)
+{
+  int mid_row;
+  int map_len;
+
+  map_len = ft_struct_map_len(map);
+  if (map_len % 2 == 0)
+    mid_row = (map_len / 2) - 1;
+  else
+    mid_row = map_len / 2;
+  return (mid_row);
 }

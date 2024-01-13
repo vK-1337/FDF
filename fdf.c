@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 12:47:12 by vk               ###   ########.fr       */
+/*   Updated: 2024/01/13 19:19:43 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int ac, char **av)
 	if (!map)
 		return (close(fd), 0);
 	struct_map = ft_convert_map(map);
+  ft_points_spacing(struct_map);
 	ft_print_struct_map(struct_map);
 	printf("\n\n");
 	ft_fdf(struct_map);
@@ -188,14 +189,12 @@ int	handle_mouse_press(int button, int x, int y, t_hook_data *data)
 		data->mouse_x = x;
 		data->mouse_y = y;
 		data->mouse_one_pressed = 1;
-		printf("mouse one pressed\n");
 	}
 	if (button == 3)
 	{
 		data->mouse_x = x;
 		data->mouse_y = y;
 		data->mouse_two_pressed = 1;
-		printf("mouse two pressed\n");
 	}
 	if (button == 4)
 		ft_zoom_in(data);
@@ -208,15 +207,9 @@ int	handle_mouse_release(int button, int x __attribute__((unused)),
 		int y __attribute__((unused)), t_hook_data *data)
 {
 	if (button == 1)
-	{
 		data->mouse_one_pressed = 0;
-		printf("mouse one released\n");
-	}
 	if (button == 3)
-	{
 		data->mouse_two_pressed = 0;
-		printf("mouse two released\n");
-	}
 	return (0);
 }
 
@@ -267,7 +260,6 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 	}
 	if (data->mouse_two_pressed)
 	{
-		printf("mouse two pressed\n");
 		old_x = data->mouse_x;
 		old_y = data->mouse_y;
 		data->mouse_x = x;
@@ -278,23 +270,32 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 		positions.new_y = data->mouse_y;
 		if (data->mouse_x > old_x && data->mouse_y < old_y)
 		{
+      ft_rotate_map_z(data->map, 0.025);
+      ft_rotate_map_y(data->map, 0.025);
 		}
-		if (data->mouse_x > old_x)
-		{
-			ft_rotate_map_y(data->map, 0.05);
-		}
-		if (data->mouse_x < old_x)
-		{
-			ft_rotate_map_y(data->map, -0.05);
-		}
-		if (data->mouse_y > old_y)
-		{
-			ft_rotate_map_x(data->map, 0.05);
-		}
-		if (data->mouse_y < old_y)
-		{
-			ft_rotate_map_x(data->map, -0.05);
-		}
+    else if (data->mouse_x > old_x && data->mouse_y > old_y)
+    {
+      ft_rotate_map_z(data->map, 0.025);
+      ft_rotate_map_y(data->map, -0.025);
+    }
+    else if (data->mouse_x < old_x && data->mouse_y < old_y)
+    {
+      ft_rotate_map_z(data->map, -0.025);
+      ft_rotate_map_y(data->map, 0.025);
+    }
+    else if (data->mouse_x < old_x && data->mouse_y > old_y)
+    {
+      ft_rotate_map_z(data->map, -0.025);
+      ft_rotate_map_y(data->map, -0.025);
+    }
+		else if (data->mouse_x > old_x)
+			ft_rotate_map_y(data->map, 0.025);
+		else if (data->mouse_x < old_x)
+			ft_rotate_map_y(data->map, -0.025);
+		else if (data->mouse_y > old_y)
+			ft_rotate_map_x(data->map, 0.025);
+		else if (data->mouse_y < old_y)
+			ft_rotate_map_x(data->map, -0.025);
 	}
 	return (0);
 }
@@ -312,10 +313,12 @@ void	ft_rotate_map_z(t_point ***map, double angle)
         j = 0;
         while (map[i][j])
         {
-            old_x = map[i][j]->x;
-            old_y = map[i][j]->y;
+            old_x = map[i][j]->x - CENTER_X;
+            old_y = map[i][j]->y - CENTER_Y;
             map[i][j]->x = old_x * cos(angle) - old_y * sin(angle);
             map[i][j]->y = old_x * sin(angle) + old_y * cos(angle);
+            map[i][j]->x += CENTER_X;
+            map[i][j]->y += CENTER_Y;
             j++;
         }
         i++;
@@ -335,10 +338,11 @@ void	ft_rotate_map_y(t_point ***map, double angle)
         j = 0;
         while (map[i][j])
         {
-            old_x = map[i][j]->x;
+            old_x = map[i][j]->x - CENTER_X;
             old_z = map[i][j]->z;
             map[i][j]->x = old_x * cos(angle) + old_z * sin(angle);
             map[i][j]->z = -old_x * sin(angle) + old_z * cos(angle);
+            map[i][j]->x += CENTER_X;
             j++;
         }
         i++;
@@ -358,15 +362,17 @@ void	ft_rotate_map_x(t_point ***map, double angle)
         j = 0;
         while (map[i][j])
         {
-            old_y = map[i][j]->y;
+            old_y = map[i][j]->y - CENTER_Y;
             old_z = map[i][j]->z;
             map[i][j]->y = old_y * cos(angle) - old_z * sin(angle);
             map[i][j]->z = old_y * sin(angle) + old_z * cos(angle);
+            map[i][j]->y += CENTER_Y;
             j++;
         }
         i++;
     }
 }
+
 
 int	ft_fdf(t_point ***map)
 {
@@ -380,7 +386,7 @@ int	ft_fdf(t_point ***map)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
-	ft_cast_whole_map(map, ISOMETRIC, SPACE);
+	ft_cast_whole_map(map, 45, SPACE);
 	draw_line(map, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	hook_data.map = map;
@@ -412,9 +418,9 @@ void	ft_print_struct_map(t_point ***struct_map)
 		j = 0;
 		while (struct_map[i][j])
 		{
-			printf("x = %f, y = %f, z = %f, color = %d\n", struct_map[i][j]->x,
-				struct_map[i][j]->y, struct_map[i][j]->z,
-				struct_map[i][j]->color);
+			printf("x => %f, y => %f, z => %f, x_space => %d, y_space => %d\n",
+        struct_map[i][j]->x, struct_map[i][j]->y, struct_map[i][j]->z,
+        struct_map[i][j]->x_space, struct_map[i][j]->y_space);
 			j++;
 		}
 		printf("\n");
@@ -428,11 +434,11 @@ void	ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
 	double	new_x;
 	double	new_y;
 
-	new_x = ((point->x + x_space) * cos_theta) - ((point->y + y_space)
-			* sin_theta) + CENTER_X;
-	new_y = ((point->x + x_space) * sin_theta) + ((point->y + y_space)
-			* cos_theta) + CENTER_Y;
-	point->x = new_x;
+	new_x = ((point->x + (x_space)) * cos_theta) - ((point->y + (y_space))
+			* sin_theta);
+	new_y = ((point->x + (x_space)) * sin_theta) + ((point->y + (y_space))
+			* cos_theta);
+	point->x = new_x + CENTER_X;
 	point->y = new_y;
 }
 
@@ -443,7 +449,7 @@ void	ft_rotate_x(t_point *point, double sin_theta, double cos_theta)
 
 	new_y = (point->y * cos_theta) - ((point->z * 20) * sin_theta);
 	new_z = (point->y * sin_theta) + ((point->z * 20) * cos_theta);
-	point->y = new_y;
+	point->y = new_y + CENTER_Y;
 	point->z = new_z;
 }
 
@@ -454,7 +460,7 @@ void	ft_rotate_y(t_point *point, double sin_theta, double cos_theta)
 
 	new_x = (point->x * cos_theta) + ((point->z * 20) * sin_theta);
 	new_z = (point->x * sin_theta) + ((point->z * 20) * cos_theta);
-	point->x = new_x;
+	point->x = new_x + CENTER_X;
 	point->z = new_z;
 }
 
@@ -467,7 +473,7 @@ void	ft_cast_point(t_point *point, int angle, int x_space, int y_space)
 	rad = (angle * M_PI) / 180.0;
 	cos_theta = cos(rad);
 	sin_theta = sin(rad);
-	printf("x_space => %d, y_space => %d\n", x_space, y_space);
+	// printf("x_space => %d, y_space => %d\n", x_space, y_space);
 	ft_rotate_z(point, sin_theta, cos_theta, x_space, y_space);
 	ft_rotate_x(point, sin_theta, cos_theta);
 }
@@ -480,11 +486,11 @@ void	ft_cast_whole_map(t_point ***map, int angle, int space)
 	int	y_space;
 
 	i = 0;
-	y_space = 0;
+	y_space = map[0][0]->y_space;
 	while (map[i])
 	{
 		j = 0;
-		x_space = 0;
+		x_space = map[i][0]->x_space;
 		while (map[i][j])
 		{
 			ft_cast_point(map[i][j], angle, x_space, y_space);
@@ -495,7 +501,6 @@ void	ft_cast_whole_map(t_point ***map, int angle, int space)
 		i++;
 	}
 }
-
 void	draw_line(t_point ***map, t_data *img)
 {
 	int	i;
@@ -509,17 +514,17 @@ void	draw_line(t_point ***map, t_data *img)
 		{
 			if ((j < ft_struct_linelen(map[i])) && (map[i][j + 1]))
 				bresenham(round(map[i][j]->x), round(map[i][j]->y),
-					round(map[i][j + 1]->x), round(map[i][j + 1]->y), img);
+					round(map[i][j + 1]->x), round(map[i][j + 1]->y), img, map[i][j]->color);
 			if ((i < ft_struct_map_len(map) - 1) && map[i + 1][j])
 				bresenham(round(map[i][j]->x), round(map[i][j]->y), round(map[i
-						+ 1][j]->x), round(map[i + 1][j]->y), img);
+						+ 1][j]->x), round(map[i + 1][j]->y), img, map[i][j]->color);
 			j++;
 		}
 		i++;
 	}
 }
 
-void	bresenham(int x1, int y1, int x2, int y2, t_data *img)
+void	bresenham(int x1, int y1, int x2, int y2, t_data *img, long color)
 {
 	int	dx;
 	int	dy;
@@ -535,7 +540,10 @@ void	bresenham(int x1, int y1, int x2, int y2, t_data *img)
 	err = dx - dy;
 	while (x1 != x2 || y1 != y2)
 	{
-		my_mlx_pixel_put(img, x1, y1, 0x00FF0000);
+    if (!color)
+      my_mlx_pixel_put(img, x1, y1, 0x000000);
+    else
+		  my_mlx_pixel_put(img, x1, y1, (int)color);
 		err2 = 2 * err;
 		if (err2 > -dy)
 		{
