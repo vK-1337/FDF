@@ -16,6 +16,9 @@
 # define HEIGHT 1080
 # define CENTER_X 960
 # define CENTER_Y 540
+# define ISOMETRIC 45
+# define PARALLEL 0
+# define SPACE 30
 
 // STRUCT //
 typedef struct s_data
@@ -93,6 +96,9 @@ void		ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
 				int x_space, int y_space);
 void ft_cast_point(t_point *point, int angle, int x_space, int y_space);
 void		ft_cast_whole_map(t_point ***map, int angle, int space);
+void ft_rotate_map_z(t_point ***map, double angle);
+void ft_rotate_map_x(t_point ***map, double angle);
+void ft_rotate_map_y(t_point ***map, double angle);
 
 // GRAPHICS //
 void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,

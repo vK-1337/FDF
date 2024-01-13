@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/12 19:40:11 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/13 12:36:35 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,113 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 		else if (data->mouse_y < old_y)
 			ft_move_up(data->map, &positions);
 	}
+	if (data->mouse_two_pressed)
+	{
+		printf("mouse two pressed\n");
+		old_x = data->mouse_x;
+		old_y = data->mouse_y;
+		data->mouse_x = x;
+		data->mouse_y = y;
+		positions.old_x = old_x;
+		positions.old_y = old_y;
+		positions.new_x = data->mouse_x;
+		positions.new_y = data->mouse_y;
+		if (data->mouse_x > old_x && data->mouse_y < old_y)
+		{
+		}
+		if (data->mouse_x > old_x)
+		{
+			ft_rotate_map_y(data->map, 0.05);
+		}
+		if (data->mouse_x < old_x)
+		{
+			ft_rotate_map_y(data->map, -0.05);
+		}
+		if (data->mouse_y > old_y)
+		{
+			ft_rotate_map_x(data->map, 0.05);
+		}
+		if (data->mouse_y < old_y)
+		{
+			ft_rotate_map_x(data->map, -0.05);
+		}
+	}
 	return (0);
+}
+
+void	ft_rotate_map_z(t_point ***map, double angle)
+{
+	int	i;
+	int	j;
+	int	x_space;
+	int	y_space;
+
+	i = 0;
+	y_space = 0;
+	while (map[i])
+	{
+		j = 0;
+		x_space = 0;
+		while (map[i][j])
+		{
+			map[i][j]->x = (map[i][j]->x) * cos(angle) - (map[i][j]->y)
+				* sin(angle);
+			map[i][j]->y = (map[i][j]->x) * sin(angle) + (map[i][j]->y)
+				* cos(angle);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_rotate_map_y(t_point ***map, double angle)
+{
+	int	i;
+	int	j;
+	int	x_space;
+	int	y_space;
+
+	i = 0;
+	y_space = 0;
+	while (map[i])
+	{
+		j = 0;
+		x_space = 0;
+		while (map[i][j])
+		{
+			map[i][j]->x = (map[i][j]->x) * cos(angle) + (map[i][j]->z)
+				* sin(angle);
+			map[i][j]->z = (map[i][j]->x) * -sin(angle) + (map[i][j]->z)
+				* cos(angle);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_rotate_map_x(t_point ***map, double angle)
+{
+	int	i;
+	int	j;
+	int	x_space;
+	int	y_space;
+
+	i = 0;
+	y_space = 0;
+	while (map[i])
+	{
+		j = 0;
+		x_space = 0;
+		while (map[i][j])
+		{
+			map[i][j]->y = (map[i][j]->y) * cos(angle) - (map[i][j]->z)
+				* sin(angle);
+			map[i][j]->z = (map[i][j]->y) * sin(angle) + (map[i][j]->z)
+				* cos(angle);
+			j++;
+		}
+		i++;
+	}
 }
 
 int	ft_fdf(t_point ***map)
@@ -280,7 +386,7 @@ int	ft_fdf(t_point ***map)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
-	ft_cast_whole_map(map, 45, 30);
+	ft_cast_whole_map(map, ISOMETRIC, SPACE);
 	draw_line(map, &img);
 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	hook_data.map = map;
@@ -339,10 +445,25 @@ void	ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
 void	ft_rotate_x(t_point *point, double sin_theta, double cos_theta)
 {
 	double	new_y;
+	double	new_z;
 
 	new_y = (point->y * cos_theta) - ((point->z * 20) * sin_theta);
+	new_z = (point->y * sin_theta) + ((point->z * 20) * cos_theta);
 	point->y = new_y;
+	point->z = new_z;
 }
+
+void	ft_rotate_y(t_point *point, double sin_theta, double cos_theta)
+{
+	double	new_x;
+	double	new_z;
+
+	new_x = (point->x * cos_theta) + ((point->z * 20) * sin_theta);
+	new_z = (point->x * sin_theta) + ((point->z * 20) * cos_theta);
+	point->x = new_x;
+	point->z = new_z;
+}
+
 void	ft_cast_point(t_point *point, int angle, int x_space, int y_space)
 {
 	double	rad;
