@@ -6,7 +6,7 @@
 /*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 21:51:40 by vk               ###   ########.fr       */
+/*   Updated: 2024/01/13 21:54:06 by vk               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,14 @@ int	handle_key(int key, t_hook_data *data)
     ft_rotate_map_z(data->map, -0.025);
   if (key == 'z')
     ft_rotate_map_z(data->map, 0.025);
+  if (key == 65362)
+    ft_move_up(data->map, NULL);
+  if (key == 65364)
+    ft_move_down(data->map, NULL);
+  if (key == 65361)
+    ft_move_left(data->map, NULL);
+  if (key == 65363)
+    ft_move_right(data->map, NULL);
 	return (0);
 }
 
