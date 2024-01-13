@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/07 14:53:25 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:43:00 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,4 +137,65 @@ int ft_maplen(char ***map)
 		i++;
   }
 	return (i);
+}
+
+
+t_point ***ft_convert_map(char ***map)
+{
+  int i;
+  int j;
+  t_point ***new_map;
+
+  new_map = malloc((ft_maplen(map) + 1) * sizeof (t_point **));
+  i = 0;
+  while (map[i])
+  {
+    new_map[i] = malloc((ft_linelen(map[i]) + 1) * (sizeof (t_point *)));
+    j = 0;
+    while (map[i][j])
+    {
+      new_map[i][j] = ft_convert_point(j, i, map[i][j]);
+      j++;
+    }
+    new_map[i][j] = NULL;
+    i++;
+  }
+  new_map[i] = NULL;
+  return (new_map);
+}
+
+t_point *ft_convert_point(int x, int y, char *z)
+{
+  t_point *point;
+
+  point = malloc(sizeof(t_point));
+  if (!point)
+    return (NULL);
+  point->x = x;
+  point->y = y;
+  point->z = ft_atoi(z);
+
+  return (point);
+}
+int ft_struct_map_len(t_point ***map)
+{
+  int i;
+  if (!map)
+    return (0);
+  i = 0;
+  while (map[i])
+    i++;
+  return (i);
+}
+
+int			ft_struct_linelen(t_point **line)
+{
+  int	i;
+
+  if (!line)
+    return (0);
+  i = 0;
+  while (line[i])
+    i++;
+  return (i);
 }

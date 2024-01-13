@@ -6,7 +6,9 @@ SRCS = fdf.c \
 			./gnl/get_next_line_utils.c \
 			./gnl/get_next_line.c \
 
-OBJS = $(SRCS:.c=.o) ./libft/libft.a ./minilibx-linux/libmlx_Linux.a
+OBJS = $(SRCS:.c=.o) ./libft/libft.a
+
+MLX = ./minilibx-linux/libmlx_Linux.a
 
 NAME = fdf
 
@@ -21,7 +23,7 @@ NC = \033[0m
 YELLOW = \e[0;93m
 
 $(NAME): $(OBJS)
-	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) -lXext -lX11 -lm -lz -o $(NAME) $(MLX)
 	@echo "	 			+---------------------+\n \
 					|  $(YELLOW)     FDF $(GREEN)[OK]$(NC)      |\n \
 					+---------------------+"

@@ -10,9 +10,17 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
-#include <math.h>
-// STRUCT //
+#include <X11/X.h>
 
+# define WIDTH 1920
+# define HEIGHT 1080
+# define CENTER_X 960
+# define CENTER_Y 540
+# define ISOMETRIC 45
+# define PARALLEL 0
+# define SPACE 30
+
+// STRUCT //
 typedef struct s_data
 {
 	void	*img;
@@ -22,41 +30,89 @@ typedef struct s_data
 	int		endian;
 }			t_data;
 
+typedef struct s_point
+{
+	double	x;
+	double	y;
+	double	z;
+	int		color;
+}			t_point;
+
+typedef struct s_redraw
+{
+  t_point ***map;
+  t_data *img;
+  void *mlx;
+  void *mlx_win;
+}    t_redraw;
+
+typedef struct	s_hook_data {
+	void	*mlx;
+	void	*mlx_win;
+	int		mouse_x;
+	int		mouse_y;
+	int		mouse_one_pressed;
+  int		mouse_two_pressed;
+  t_data *img;
+  t_point ***map;
+}				t_hook_data;
+
+typedef struct s_positions {
+  int old_x;
+  int old_y;
+  int new_x;
+  int new_y;
+} t_positions;
+
 // MAIN FUNCTION //
-int			ft_fdf(char ***map);
+int			ft_fdf(t_point ***map);
 
 // PARSING //
 int			ft_maplen(char ***map);
-char	***ft_join_map_lines(char ***map, char **new_line);
 char		***ft_create_map_from_file(int fd);
 int			ft_valid_file(char *file_name);
-char		*remove_spaces_and_newlines(char *str);
-char ***copy_map_content(char ***map, char ***new_map, char **new_line, int maplen);
-int			get_map_length(char ***map);
-int get_line_length(char **new_line);
-void ft_trim_nl(char **points);
-char ***ft_add_map_line(char ***map, char **newline);
-char ***ft_join_map(char ***old_map, char** new_line);
-char **ft_null_line(int line_len);
-int ft_linelen(char **line);
-void print_map(char ***map);
+void		ft_trim_nl(char **points);
+char		***ft_add_map_line(char ***map, char **newline);
+char		***ft_join_map(char ***old_map, char **new_line);
+int			ft_linelen(char **line);
+t_point		***ft_convert_map(char ***map);
+void		ft_print_struct_map(t_point ***struct_map);
+t_point		*ft_convert_point(int x, int y, char *z);
+int			ft_struct_map_len(t_point ***map);
+int			ft_struct_linelen(t_point **line);
+
 // MEMORY //
 void		ft_free_memory(char **tab);
 void		free_old_map(char ***map, int maplen);
-char    ***allocate_new_map(int maplen, int line_length);
+char		***allocate_new_map(int maplen, int line_length);
+
 // DEBUG //
 void		ft_print_all_lines(char **lines_tab);
+void		print_map(char ***map);
 
 // CALCULATIONS //
-double ft_first_rot_x(int x, int y);
-double ft_first_rot_y(int x, int y);
-double ft_arc_tan_x(double x);
-double ft_arc_tan_y(double x, double y, int z);
+void		ft_rotate_x(t_point *point, double sin_theta, double cos_theta);
+void		ft_rotate_z(t_point *point, double sin_theta, double cos_theta,
+				int x_space, int y_space);
+void ft_cast_point(t_point *point, int angle, int x_space, int y_space);
+void		ft_cast_whole_map(t_point ***map, int angle, int space);
+void ft_rotate_map_z(t_point ***map, double angle);
+void ft_rotate_map_x(t_point ***map, double angle);
+void ft_rotate_map_y(t_point ***map, double angle);
 
 // GRAPHICS //
 void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
 				int color);
 void		bresenham(int x1, int y1, int x2, int y2, t_data *img);
-void		draw_line(char ***map, t_data *img);
+void		draw_line(t_point ***map, t_data *img);
+int ft_render(t_hook_data *redraw);
+
+// BONUS FUNCTIONS //
+void		ft_zoom_in(t_hook_data *redraw);
+void		ft_zoom_out(t_hook_data *redraw);
+void		ft_move_up(t_point ***map, t_positions *positions);
+void		ft_move_down(t_point ***map, t_positions *positions);
+void		ft_move_left(t_point ***map, t_positions *positions);
+void		ft_move_right(t_point ***map, t_positions *positions);
 
 #endif
