@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 19:19:43 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/13 21:51:40 by vk               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,25 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	handle_key(int key, void *param)
+int	handle_key(int key, t_hook_data *data)
 {
-	(void)param;
 	if (key == 65307)
 	{
 		printf("exit\n");
 		exit(0);
 	}
+  if (key == 'x' && data->event_mask & ShiftMask)
+    ft_rotate_map_x(data->map, -0.025);
+  if (key == 'x')
+    ft_rotate_map_x(data->map, 0.025);
+  if (key == 'y' && data->event_mask & ShiftMask)
+    ft_rotate_map_y(data->map, -0.025);
+  if (key == 'y')
+    ft_rotate_map_y(data->map, 0.025);
+  if (key == 'z' && data->event_mask & ShiftMask)
+    ft_rotate_map_z(data->map, -0.025);
+  if (key == 'z')
+    ft_rotate_map_z(data->map, 0.025);
 	return (0);
 }
 
@@ -299,7 +310,6 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 	}
 	return (0);
 }
-
 void	ft_rotate_map_z(t_point ***map, double angle)
 {
     int	i;
@@ -477,6 +487,8 @@ void	ft_cast_point(t_point *point, int angle, int x_space, int y_space)
 	ft_rotate_z(point, sin_theta, cos_theta, x_space, y_space);
 	ft_rotate_x(point, sin_theta, cos_theta);
 }
+
+
 
 void	ft_cast_whole_map(t_point ***map, int angle, int space)
 {
