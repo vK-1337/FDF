@@ -5,6 +5,7 @@ SRCS = fdf.c \
 			utils.c \
 			./gnl/get_next_line_utils.c \
 			./gnl/get_next_line.c \
+			map_utils.c \
 
 OBJS = $(SRCS:.c=.o) ./libft/libft.a
 
