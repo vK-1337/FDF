@@ -6,7 +6,7 @@
 /*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 21:54:06 by vk               ###   ########.fr       */
+/*   Updated: 2024/01/13 21:54:44 by vk               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 int	handle_key(int key, t_hook_data *data)
 {
 	if (key == 65307)
-	{
-		printf("exit\n");
 		exit(0);
-	}
   if (key == 'x' && data->event_mask & ShiftMask)
     ft_rotate_map_x(data->map, -0.025);
   if (key == 'x')
