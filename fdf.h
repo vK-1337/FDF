@@ -56,6 +56,7 @@ typedef struct s_hook_data
 	int		mouse_y;
 	int		mouse_one_pressed;
 	int		mouse_two_pressed;
+	int		shift_pressed;
 	t_data	*img;
 	t_point	***map;
 }			t_hook_data;
@@ -119,7 +120,7 @@ void		ft_points_spacing(t_point ***map);
 // GRAPHICS //
 void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
 				int color);
-void	bresenham(int x1, int y1, int x2, int y2, t_data *img, long color);
+void		bresenham(int x1, int y1, int x2, int y2, t_data *img, long color);
 void		draw_line(t_point ***map, t_data *img);
 int			ft_render(t_hook_data *redraw);
 

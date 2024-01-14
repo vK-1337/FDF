@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vk <vk@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 21:54:44 by vk               ###   ########.fr       */
+/*   Updated: 2024/01/14 09:23:31 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,23 +43,47 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
+int handle_key_released(int key, t_hook_data *data)
+{
+  if (key == 65505)
+  {
+    printf("shift released\n");
+    data->shift_pressed = 0;
+  }
+  return (0);
+}
 
-int	handle_key(int key, t_hook_data *data)
+int	handle_key_pressed(int key, t_hook_data *data)
 {
 	if (key == 65307)
 		exit(0);
-  if (key == 'x' && data->event_mask & ShiftMask)
-    ft_rotate_map_x(data->map, -0.025);
+  if (key == 65505)
+  {
+    printf("shift pressed\n");
+    data->shift_pressed = 1;
+  }
   if (key == 'x')
-    ft_rotate_map_x(data->map, 0.025);
-  if (key == 'y' && data->event_mask & ShiftMask)
-    ft_rotate_map_y(data->map, -0.025);
+  {
+    printf(data->shift_pressed ? "shift pressed\n" : "shift released\n");
+    if (data->shift_pressed)
+      ft_rotate_map_x(data->map, -0.025);
+    else
+      ft_rotate_map_x(data->map, 0.025);
+  }
   if (key == 'y')
-    ft_rotate_map_y(data->map, 0.025);
-  if (key == 'z' && data->event_mask & ShiftMask)
-    ft_rotate_map_z(data->map, -0.025);
+  {
+    if (data->shift_pressed)
+      ft_rotate_map_y(data->map, -0.025);
+    else
+      ft_rotate_map_y(data->map, 0.025);
+  }
   if (key == 'z')
-    ft_rotate_map_z(data->map, 0.025);
+  {
+    if (data->shift_pressed)
+      ft_rotate_map_z(data->map, -0.025);
+    else
+      ft_rotate_map_z(data->map, 0.025);
+  }
   if (key == 65362)
     ft_move_up(data->map, NULL);
   if (key == 65364)
@@ -286,32 +310,32 @@ int	handle_mouse_motion(int x, int y, t_hook_data *data)
 		positions.new_y = data->mouse_y;
 		if (data->mouse_x > old_x && data->mouse_y < old_y)
 		{
-      ft_rotate_map_z(data->map, 0.025);
-      ft_rotate_map_y(data->map, 0.025);
+      ft_rotate_map_x(data->map, 0.025);
+      ft_rotate_map_y(data->map, -0.025);
 		}
     else if (data->mouse_x > old_x && data->mouse_y > old_y)
     {
-      ft_rotate_map_z(data->map, 0.025);
+      ft_rotate_map_x(data->map, -0.025);
       ft_rotate_map_y(data->map, -0.025);
     }
     else if (data->mouse_x < old_x && data->mouse_y < old_y)
     {
-      ft_rotate_map_z(data->map, -0.025);
+      ft_rotate_map_x(data->map, 0.025);
       ft_rotate_map_y(data->map, 0.025);
     }
     else if (data->mouse_x < old_x && data->mouse_y > old_y)
     {
-      ft_rotate_map_z(data->map, -0.025);
-      ft_rotate_map_y(data->map, -0.025);
+      ft_rotate_map_x(data->map, -0.025);
+      ft_rotate_map_y(data->map, 0.025);
     }
 		else if (data->mouse_x > old_x)
-			ft_rotate_map_y(data->map, 0.025);
-		else if (data->mouse_x < old_x)
 			ft_rotate_map_y(data->map, -0.025);
+		else if (data->mouse_x < old_x)
+			ft_rotate_map_y(data->map, 0.025);
 		else if (data->mouse_y > old_y)
-			ft_rotate_map_x(data->map, 0.025);
-		else if (data->mouse_y < old_y)
 			ft_rotate_map_x(data->map, -0.025);
+		else if (data->mouse_y < old_y)
+			ft_rotate_map_x(data->map, 0.025);
 	}
 	return (0);
 }
@@ -330,7 +354,7 @@ void	ft_rotate_map_z(t_point ***map, double angle)
         {
             old_x = map[i][j]->x - CENTER_X;
             old_y = map[i][j]->y - CENTER_Y;
-            map[i][j]->x = old_x * cos(angle) - old_y * sin(angle);
+            map[i][j]->x = old_x * cos(angle) + old_y * (-sin(angle));
             map[i][j]->y = old_x * sin(angle) + old_y * cos(angle);
             map[i][j]->x += CENTER_X;
             map[i][j]->y += CENTER_Y;
@@ -356,7 +380,7 @@ void	ft_rotate_map_y(t_point ***map, double angle)
             old_x = map[i][j]->x - CENTER_X;
             old_z = map[i][j]->z;
             map[i][j]->x = old_x * cos(angle) + old_z * sin(angle);
-            map[i][j]->z = -old_x * sin(angle) + old_z * cos(angle);
+            map[i][j]->z = old_x * (-sin(angle)) + old_z * cos(angle);
             map[i][j]->x += CENTER_X;
             j++;
         }
@@ -379,7 +403,7 @@ void	ft_rotate_map_x(t_point ***map, double angle)
         {
             old_y = map[i][j]->y - CENTER_Y;
             old_z = map[i][j]->z;
-            map[i][j]->y = old_y * cos(angle) - old_z * sin(angle);
+            map[i][j]->y = old_y * cos(angle) + old_z * (-sin(angle));
             map[i][j]->z = old_y * sin(angle) + old_z * cos(angle);
             map[i][j]->y += CENTER_Y;
             j++;
@@ -410,7 +434,9 @@ int	ft_fdf(t_point ***map)
 	hook_data.mlx_win = mlx_win;
 	hook_data.mouse_one_pressed = 0;
 	hook_data.mouse_two_pressed = 0;
-	mlx_key_hook(mlx_win, handle_key, NULL);
+  hook_data.shift_pressed = 0;
+	mlx_hook(mlx_win, KeyPress, KeyPressMask, handle_key_pressed, &hook_data);
+  mlx_hook(mlx_win, KeyRelease, KeyReleaseMask, handle_key_released, &hook_data);
 	mlx_hook(mlx_win, ButtonPress, ButtonPressMask, handle_mouse_press,
 		&hook_data);
 	mlx_hook(mlx_win, ButtonRelease, ButtonReleaseMask, handle_mouse_release,
