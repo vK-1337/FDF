@@ -6,11 +6,18 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/14 20:23:58 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/14 20:45:05 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+// !! NORMINETTE !! //
+// !! DEFAULT COLOR FOR MAP WITH NO COLORATION !! //
+// !! ANIMATION LOOP FOR BERSERK MAP !! //
+// !! CHECK LEAKS AGAIN !! //
+// !! MALLOC PROTECTIONS !! //
+// !! CHECK THE EVAL SHEET !! //
 
 int	main(int ac, char **av)
 {
