@@ -59,6 +59,7 @@ typedef struct s_hook_data
 	int		shift_pressed;
 	t_data	*img;
 	t_point	***map;
+  t_point ***original_map;
 }			t_hook_data;
 
 typedef struct s_positions
@@ -74,6 +75,20 @@ typedef struct s_origin
 	int		row_index;
 	int		col_index;
 }			t_origin;
+
+typedef struct s_colors
+{
+  int	start_red;
+	int	start_green;
+	int	start_blue;
+	int	end_red;
+	int	end_green;
+	int	end_blue;
+	int	red;
+	int	green;
+	int	blue;
+}			t_colors;
+
 
 // MAIN FUNCTION //
 int			ft_fdf(t_point ***map);
@@ -96,6 +111,13 @@ int			ft_define_mid_col(t_point ***map);
 t_origin	ft_define_origin(t_point ***map);
 int			ft_find_coma(char *str);
 void		ft_points_spacing(t_point ***map);
+void ft_center_whole_map(t_point ***map);
+void ft_draw_commands(void *mlx_ptr, void *win_ptr);
+t_point ***ft_copy_map(t_point ***map);
+t_point *ft_copy_point(t_point *point);
+void ft_zoom_adjust(t_point ***map);
+void ft_center_for_parallel(t_point ***map);
+
 
 // MEMORY //
 void		ft_free_memory(char **tab);
@@ -120,9 +142,11 @@ void		ft_points_spacing(t_point ***map);
 // GRAPHICS //
 void		draw_grid_from_matrix(t_data *data, char ***map, int grid_spacing,
 				int color);
-void		bresenham(int x1, int y1, int x2, int y2, t_data *img, long color);
+void	bresenham(t_point point_one, t_point point_two, t_data *img);
 void		draw_line(t_point ***map, t_data *img);
 int			ft_render(t_hook_data *redraw);
+int get_color(int start_color, int end_color, double ratio);
+int interpolate(int start, int end, double ratio);
 
 // BONUS FUNCTIONS //
 void		ft_zoom_in(t_hook_data *redraw);
@@ -132,4 +156,9 @@ void		ft_move_down(t_point ***map, t_positions *positions);
 void		ft_move_left(t_point ***map, t_positions *positions);
 void		ft_move_right(t_point ***map, t_positions *positions);
 
+// FREE //
+void ft_free_struct_map(t_point ***map);
+void ft_free_map(char ***map);
+void ft_free_data(t_hook_data *data);
+int ft_close_win(void *params);
 #endif

@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/13 17:52:51 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/14 17:38:50 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,11 @@ char	***ft_create_map_from_file(int fd)
 		while (line)
 		{
 			points = ft_split(line, ' ');
+      if (!points)
+        return (free(line), NULL);
 			ft_trim_nl(points);
       map = ft_add_map_line(map, points);
+      free(line);
 			line = get_next_line(fd);
 			if (line == NULL)
 				break ;
@@ -120,7 +123,8 @@ int ft_linelen(char **line)
   int i;
 
   i = 0;
-
+  if (!line)
+    return (i);
   while(line[i])
     i++;
   return (i);
@@ -184,6 +188,7 @@ t_point *ft_convert_point(int x, int y, char *z)
     split = ft_split(z, ',');
     point->z = ft_atoi(split[0]);
     point->color = strtol(split[1], NULL, 16);
+    ft_free_memory(split);
   }
   return (point);
 }
@@ -235,6 +240,8 @@ t_origin ft_define_origin(t_point ***map)
   col_index = ft_define_mid_col(map);
   origin.row_index = row_index;
   origin.col_index = col_index;
+  printf("origin.row_index = %d\n", origin.row_index);
+  printf("origin.col_index = %d\n", origin.col_index);
   return (origin);
 }
 
@@ -262,4 +269,44 @@ int ft_define_mid_row(t_point ***map)
   else
     mid_row = map_len / 2;
   return (mid_row);
+}
+
+void ft_free_map(char ***map)
+{
+  int i;
+  int j;
+
+  i = 0;
+  while (map[i])
+  {
+    j = 0;
+    while (map[i][j])
+    {
+      free(map[i][j]);
+      j++;
+    }
+    free(map[i]);
+    i++;
+  }
+  free(map);
+}
+
+void ft_free_struct_map(t_point ***map)
+{
+  int i;
+  int j;
+
+  i = 0;
+  while (map[i])
+  {
+    j = 0;
+    while (map[i][j])
+    {
+      free(map[i][j]);
+      j++;
+    }
+    free(map[i]);
+    i++;
+  }
+  free(map);
 }
