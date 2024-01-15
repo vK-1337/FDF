@@ -1,11 +1,27 @@
 SRCS = fdf.c \
-			debug.c \
 			file.c \
-			map.c \
+			map_src/map.c \
+			map_src/map_two.c \
+			map_src/map_three.c \
+			map_src/map_four.c \
+			map_src/map_rotations.c \
 			utils.c \
 			./gnl/get_next_line_utils.c \
 			./gnl/get_next_line.c \
-			map_utils.c \
+			rotations.c \
+			draw_utils.c \
+			draw.c \
+			cast.c \
+			center.c \
+			mouse.c \
+			arrow_moves.c \
+			zoom.c \
+			keys.c \
+			hooks.c \
+			free.c \
+			projections.c \
+			mouse_moves.c \
+			berserk.c \
 
 OBJS = $(SRCS:.c=.o) ./libft/libft.a
 

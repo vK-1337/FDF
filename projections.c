@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file.c                                             :+:      :+:    :+:   */
+/*   projections.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/04 12:20:25 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 11:28:25 by vda-conc         ###   ########.fr       */
+/*   Created: 2024/01/15 12:56:38 by vda-conc          #+#    #+#             */
+/*   Updated: 2024/01/15 14:03:20 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	ft_valid_file(char *file_name)
+void	ft_parallel_projection(t_hook_data *data)
 {
-	int	name_len;
+	ft_free_struct_map(data->map);
+	data->map = ft_copy_map(data->original_map);
+	ft_zoom_adjust(data->map);
+}
 
-	name_len = ft_strlen(file_name);
-	if (file_name[name_len - 4] != '.')
-		return (0);
-	else if (file_name[name_len - 3] != 'f')
-		return (0);
-	else if (file_name[name_len - 2] != 'd')
-		return (0);
-	else if (file_name[name_len - 1] != 'f')
-		return (0);
-	return (1);
+void	ft_iso_projection(t_hook_data *data)
+{
+	ft_free_struct_map(data->map);
+	data->map = ft_copy_map(data->original_map);
+	ft_cast_whole_map(data->map, 45, SPACE);
+	ft_center_whole_map(data->map);
 }
