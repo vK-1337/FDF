@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 11:36:37 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 17:37:03 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:43:37 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void	ft_color_map(t_point ***map)
 		j = 0;
 		while (map[i][j])
 		{
-			map[i][j]->color = DEFAULT_COLOR;
+			if (map[i][j]->color == -1)
+				map[i][j]->color = DEFAULT_COLOR;
 			j++;
 		}
 		i++;

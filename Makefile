@@ -27,6 +27,8 @@ OBJS = $(SRCS:.c=.o) ./libft/libft.a
 
 MLX = ./minilibx-linux/libmlx_Linux.a
 
+MLX_A = ./minilibx-linux/libmlx.a
+
 NAME = fdf
 
 LIBFT = ./libft/libft.a
@@ -51,16 +53,22 @@ $(LIBFT):
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o ${<:.c=.o}
 
-all: $(NAME)
+all: $(MLX) $(NAME)
 
 clean:
 	rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(MLX) $(MLX_A)
 	$(MAKE) -C ./libft fclean
 
 re: fclean
 	make all
+
+minilibx-linux:
+	git clone https://github.com/42Paris/minilibx-linux.git $@
+
+$(MLX): minilibx-linux
+								cd minilibx-linux && make
 
 .PHONY: all clean fclean re

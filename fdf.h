@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:01:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 17:50:27 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:41:36 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define ISOMETRIC 45
 # define PARALLEL 0
 # define SPACE 30
-# define DEFAULT_COLOR 0xFFFFFF
+# define DEFAULT_COLOR 0xFF0000
 
 // STRUCTURES  //
 typedef struct s_data

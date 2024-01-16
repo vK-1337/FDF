@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:04:40 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 16:51:30 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/15 18:40:28 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_berserk_animation(t_hook_data *data)
 	else if (i < 45)
 		ft_zoom_out(data);
 	else if (i)
-		ft_rotate_map_y(data->map, 0.03);
+		ft_rotate_map_y(data->map, 0.01);
 	if (i < 1000000000000)
 		i++;
 }

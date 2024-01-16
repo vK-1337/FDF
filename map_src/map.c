@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 10:00:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 17:17:19 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:37:51 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_point	*ft_convert_point(int x, int y, char *z)
 	point->y = y;
 	if (!ft_find_coma(z))
 	{
-		point->color = 0;
+		point->color = -1;
 		point->z = ft_atoi(z);
 	}
 	else

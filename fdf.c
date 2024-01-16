@@ -6,13 +6,11 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 10:47:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 17:35:33 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:34:30 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-// !! CHECK THE EVAL SHEET !! //
 
 int	main(int ac, char **av)
 {
@@ -54,11 +52,10 @@ int	ft_fdf(t_point ***map, int berserk_map)
 	img.img = mlx_new_image(mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 			&img.endian);
+	ft_color_map(map);
 	hook_data.original_map = ft_copy_map(map);
 	hook_data.img = &img;
 	hook_data.berserk_map = berserk_map;
-	if (!ft_colored_map(map))
-		ft_color_map(map);
 	ft_cast_whole_map(map, 45, SPACE);
 	ft_center_whole_map(map);
 	draw_line(map, &img);
