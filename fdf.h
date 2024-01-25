@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:01:41 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/16 09:41:36 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/25 13:16:38 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int			ft_fdf(t_point ***map, int is_berserk_map);
 
 // ANIMATIONS //
 void		ft_berserk_animation(t_hook_data *data);
+void ft_change_color(t_hook_data *data, int call_count);
 
 // MAP && PARSING //
 int			ft_maplen(char ***map);
