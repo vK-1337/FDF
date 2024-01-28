@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 11:16:59 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/15 16:48:28 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/27 18:44:02 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_render(t_hook_data *data)
 	if (data->berserk_map == 1 && data->any_key_pressed == 0)
 		ft_berserk_animation(data);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
-	ft_draw_commands(data->mlx, data->mlx_win);
+	// ft_draw_commands(data->mlx, data->mlx_win);
 	return (0);
 }
 

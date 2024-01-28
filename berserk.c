@@ -6,7 +6,7 @@
 /*   By: vda-conc <vda-conc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 15:04:40 by vda-conc          #+#    #+#             */
-/*   Updated: 2024/01/25 14:12:22 by vda-conc         ###   ########.fr       */
+/*   Updated: 2024/01/27 18:50:09 by vda-conc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	ft_berserk_animation(t_hook_data *data)
 		ft_rotate_map_y(data->map, 0.01);
 	if (i < 1000000000000)
 		i++;
+  usleep(2000);
 }
 
 void ft_change_color(t_hook_data *data, int call_count)
